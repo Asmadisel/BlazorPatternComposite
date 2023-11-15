@@ -1,0 +1,109 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+
+@page "/apartments"
+
+<PageTitle>Apartments</PageTitle>
+
+@using BlazorPatternComposite.Data
+@inject Component component
+
+
+<h3>Apartments</h3>
+
+
+
+@if (house == null)
+{
+    <p><em>Сейчас здесь пусто...</em></p>
+};
+else
+{
+    <ol>
+@foreach(var ap in house)
+{
+    <li>
+        @ap
+    </li>
+}
+
+    </ol>
+}
+
+<EditForm OnSubmit="Submit">
+    <p>
+        Name: <br/>
+        <InputText id="name" @bind-Value="name"/>
+    </p>
+    <p>
+        Square: <br/>
+        <InputNumber id="square" @bind-Value="square"></InputNumber>
+    </p>
+    <button type="submit"></button>
+</EditForm>
+
+@code {
+    private string? name;
+    private double square;
+
+    private List<Apartment> house = new List<Apartment>
+    {
+
+    };
+
+    void Submit()
+    {
+        house.Add(new Apartment(name,square));
+    }
+
+    abstract public class Component
+    {
+        protected string name;
+        protected double square;
+
+        public Component(string name, double square)
+        {
+            this.name = name;
+            this.square=square;
+        }
+
+        public virtual void Add(Component component) { }
+        public virtual void Remove(Component component) { }
+
+        public virtual void GetInfo()
+        {
+
+        }
+    }
+
+    public class Apartment : Component
+    {
+
+
+        private List<Component> components = new List<Component>();
+
+
+        public Apartment(string name, double square) : base(name, square) { }
+
+
+
+
+        public override void Add(Component component)
+        {
+            components.Add(component);
+        }
+        public override void Remove(Component component)
+        {
+            components.Remove(component);
+        }
+        public override void GetInfo()
+        {
+
+        }
+    }
+    public class Furniture : Component
+    {
+        public Furniture(string name, double square) : base(name, square) { }
+    }
+}
+    
